@@ -12,13 +12,11 @@ pub fn build(b: *std.Build) void {
 
     glfw.addIncludePath(b.path("libs/glfw/src"));
     glfw.addIncludePath(b.path("libs/glfw/include"));
+
     glfw.linkLibC();
 
     if (target.result.os.tag == .windows) {
         glfw.linkSystemLibrary("gdi32");
-
-        //glfw.linkSystemLibrary("user32");
-        //glfw.linkSystemLibrary("shell32");
 
         const glfw_c_flags = .{"-D_GLFW_WIN32"};
         glfw.addCSourceFiles(.{
@@ -45,7 +43,8 @@ pub fn build(b: *std.Build) void {
     imgui.addIncludePath(b.path("libs/imgui"));
     imgui.addIncludePath(b.path("libs/imgui/backends"));
     imgui.addIncludePath(b.path("libs/glfw/include"));
-    imgui.linkLibC();
+
+    imgui.linkLibCpp();
 
     const imgui_c_flags = .{ "-std=c++11", "-Wall" };
     imgui.addCSourceFiles(.{
@@ -55,29 +54,31 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(imgui);
 
-    const exe = b.addExecutable(.{
+    const micro_frame = b.addExecutable(.{
         .name = "micro-frame",
         .target = target,
         .optimize = optimize,
     });
 
-    exe.addIncludePath(b.path("libs/glfw/include"));
-    exe.addIncludePath(b.path("libs/imgui"));
+    micro_frame.addIncludePath(b.path("libs/glfw/include"));
+    micro_frame.addIncludePath(b.path("libs/imgui"));
+    micro_frame.addIncludePath(b.path("data"));
+    micro_frame.addIncludePath(b.path("src/mdi"));
 
-    const exe_c_flags = .{ "-std=c99", "-Wall" };
-    exe.addCSourceFiles(.{
+    const micro_frame_c_flags = .{ "-std=c++11", "-Wall" };
+    micro_frame.addCSourceFiles(.{
         .files = &micro_frame_sources,
-        .flags = &exe_c_flags,
+        .flags = &micro_frame_c_flags,
     });
 
-    exe.linkLibC();
-    exe.linkSystemLibrary("opengl32");
-    exe.linkLibrary(glfw);
-    exe.linkLibrary(imgui);
+    micro_frame.linkLibCpp();
+    micro_frame.linkSystemLibrary("opengl32");
+    micro_frame.linkLibrary(glfw);
+    micro_frame.linkLibrary(imgui);
 
-    b.installArtifact(exe);
+    b.installArtifact(micro_frame);
 
-    const run_cmd = b.addRunArtifact(exe);
+    const run_cmd = b.addRunArtifact(micro_frame);
     run_cmd.step.dependOn(b.getInstallStep());
 
     if (b.args) |args| {
@@ -88,7 +89,7 @@ pub fn build(b: *std.Build) void {
     run_step.dependOn(&run_cmd.step);
 }
 
-const micro_frame_sources = .{"src/main.c"};
+const micro_frame_sources = .{ "src/main.cpp", "src/mdi/mdi.cpp" };
 
 const glfw_base_sources = .{
     "libs/glfw/src/context.c",
