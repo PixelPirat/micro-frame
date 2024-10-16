@@ -36,6 +36,25 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(glfw);
 
+    const imgui = b.addStaticLibrary(.{
+        .name = "imgui",
+        .target = target,
+        .optimize = optimize,
+    });
+
+    imgui.addIncludePath(b.path("libs/imgui"));
+    imgui.addIncludePath(b.path("libs/imgui/backends"));
+    imgui.addIncludePath(b.path("libs/glfw/include"));
+    imgui.linkLibC();
+
+    const imgui_c_flags = .{ "-std=c++11", "-Wall" };
+    imgui.addCSourceFiles(.{
+        .files = &imgui_sources,
+        .flags = &imgui_c_flags,
+    });
+
+    b.installArtifact(imgui);
+
     const exe = b.addExecutable(.{
         .name = "micro-frame",
         .target = target,
@@ -43,6 +62,7 @@ pub fn build(b: *std.Build) void {
     });
 
     exe.addIncludePath(b.path("libs/glfw/include"));
+    exe.addIncludePath(b.path("libs/imgui"));
 
     const exe_c_flags = .{ "-std=c99", "-Wall" };
     exe.addCSourceFiles(.{
@@ -53,6 +73,7 @@ pub fn build(b: *std.Build) void {
     exe.linkLibC();
     exe.linkSystemLibrary("opengl32");
     exe.linkLibrary(glfw);
+    exe.linkLibrary(imgui);
 
     b.installArtifact(exe);
 
@@ -94,4 +115,14 @@ const glfw_windows_sources = .{
     "libs/glfw/src/win32_thread.c",
     "libs/glfw/src/win32_time.c",
     "libs/glfw/src/win32_window.c",
+};
+
+const imgui_sources = .{
+    "libs/imgui/imgui.cpp",
+    "libs/imgui/imgui_demo.cpp",
+    "libs/imgui/imgui_draw.cpp",
+    "libs/imgui/imgui_tables.cpp",
+    "libs/imgui/imgui_widgets.cpp",
+    "libs/imgui/backends/imgui_impl_opengl3.cpp",
+    "libs/imgui/backends/imgui_impl_glfw.cpp",
 };
