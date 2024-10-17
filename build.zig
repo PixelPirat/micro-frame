@@ -54,6 +54,25 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(imgui);
 
+    const nodes = b.addStaticLibrary(.{
+        .name = "nodes",
+        .target = target,
+        .optimize = optimize,
+    });
+
+    nodes.addIncludePath(b.path("libs/nodes/include/"));
+    nodes.addIncludePath(b.path("libs/imgui"));
+
+    nodes.linkLibCpp();
+
+    const nodes_c_flags = .{ "-std=c++11", "-Wall" };
+    nodes.addCSourceFiles(.{
+        .files = &nodes_sources,
+        .flags = &nodes_c_flags,
+    });
+
+    b.installArtifact(nodes);
+
     const micro_frame = b.addExecutable(.{
         .name = "micro-frame",
         .target = target,
@@ -62,6 +81,7 @@ pub fn build(b: *std.Build) void {
 
     micro_frame.addIncludePath(b.path("libs/glfw/include"));
     micro_frame.addIncludePath(b.path("libs/imgui"));
+    micro_frame.addIncludePath(b.path("libs/nodes/include"));
     micro_frame.addIncludePath(b.path("data"));
     micro_frame.addIncludePath(b.path("src/mdi"));
 
@@ -75,6 +95,7 @@ pub fn build(b: *std.Build) void {
     micro_frame.linkSystemLibrary("opengl32");
     micro_frame.linkLibrary(glfw);
     micro_frame.linkLibrary(imgui);
+    micro_frame.linkLibrary(nodes);
 
     b.installArtifact(micro_frame);
 
@@ -127,3 +148,5 @@ const imgui_sources = .{
     "libs/imgui/backends/imgui_impl_opengl3.cpp",
     "libs/imgui/backends/imgui_impl_glfw.cpp",
 };
+
+const nodes_sources = .{"libs/nodes/src/node_library.cpp"};

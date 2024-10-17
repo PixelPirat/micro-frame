@@ -1,5 +1,5 @@
-#ifndef __MDI_HPP__
-#define __MDI_HPP__
+#ifndef __MDI_H__
+#define __MDI_H__
 
 
 #include <imgui.h>
@@ -30,9 +30,9 @@ typedef struct {
 } MDI;
 
 
-MDI_STATE mdi_init( MDI *mdi );
-MDI_STATE mdi_deinit( MDI *mdi );
-MDI_STATE mdi_show( MDI *mdi );
+MDI_STATE MDI_Init( MDI *mdi );
+MDI_STATE MDI_Deinit( MDI *mdi );
+MDI_STATE MDI_Show( MDI *mdi );
 
 
-#endif//__MDI_HPP__
+#endif//__MDI_H__

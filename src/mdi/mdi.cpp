@@ -9,7 +9,7 @@ static void SetDockspace( MDI *mdi );
 static void SetTitlebar( MDI *mdi, const ImGuiViewport *viewport );
 
 
-MDI_STATE mdi_init( MDI *mdi )
+MDI_STATE MDI_Init( MDI *mdi )
 {
 	if( !glfwInit() )
 	{
@@ -55,7 +55,7 @@ MDI_STATE mdi_init( MDI *mdi )
 	return mdi->state;
 }
 
-MDI_STATE mdi_deinit( MDI *mdi )
+MDI_STATE MDI_Deinit( MDI *mdi )
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
@@ -67,7 +67,7 @@ MDI_STATE mdi_deinit( MDI *mdi )
 	return MDI_STATE_NONE;
 }
 
-MDI_STATE mdi_show( MDI *mdi )
+MDI_STATE MDI_Show( MDI *mdi )
 {
 	if( mdi->state != MDI_STATE_INIT_OK )
 	{
