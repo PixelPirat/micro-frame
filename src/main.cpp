@@ -21,7 +21,33 @@ int main( int argc, char *argv[] )
 
     if( !NodeLibrary_AddDirectory( &nodeLib, "TestDir 1" ) )
     {
-        printf("Error, failed to add a directory!\n");
+        printf("Error, failed to add directory 1!\n");
+    }
+    if( !NodeLibrary_AddDirectory( &nodeLib, "TestDir 2" ) )
+    {
+        printf("Error, failed to add directory 2!\n");
+    }
+    if( !NodeLibrary_AddDirectory( &nodeLib, "TestDir 3" ) )
+    {
+        printf("Error, failed to add directory 3!\n");
+    }
+
+
+    if( !NodeLibrary_AddNode( &nodeLib, "Node 1", "TestDir 2" ) )
+    {
+        printf("Error, failed to add node 1!\n");
+    }
+    if( !NodeLibrary_AddNode( &nodeLib, "Node 2", "TestDir 2" ) )
+    {
+        printf("Error, failed to add node 2!\n");
+    }
+    if( !NodeLibrary_AddNode( &nodeLib, "Node 3", "TestDir 2" ) )
+    {
+        printf("Error, failed to add node 3!\n");
+    }
+    if( !NodeLibrary_AddNode( &nodeLib, "Node 4", "TestDir 1" ) )
+    {
+        printf("Error, failed to add node 4!\n");
     }
 
     NodeLibrary_Deinit( &nodeLib );

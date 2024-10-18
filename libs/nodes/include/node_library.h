@@ -8,7 +8,7 @@
 
 typedef struct {
     const char * name;
-    size_t directoryElement;
+    size_t directoryIndex;
 } NodeEntry;
 
 typedef struct {
@@ -16,7 +16,7 @@ typedef struct {
     size_t directoryElements;
     size_t directoryCapasity;
 
-    NodeEntry ** nodes;
+    NodeEntry * nodes;
     size_t nodeElements;
     size_t nodeCapasity;
 } NodeLibrary;
@@ -25,8 +25,11 @@ typedef struct {
 bool NodeLibrary_Init( NodeLibrary *lib );
 bool NodeLibrary_Deinit( NodeLibrary *lib );
 
-bool NodeLibrary_AddDirectory( NodeLibrary *lib, const char* name );
-bool NodeLibrary_AddNode( NodeLibrary *lib, const char* name, const char * directory );
+bool NodeLibrary_AddDirectory( NodeLibrary *lib, const char *name );
+bool NodeLibrary_AddNode( NodeLibrary *lib, const char *name, const char *directory );
+
+
+void NodeLibrary_PrintDirectories( NodeLibrary *lib );
 
 
 #endif//__NODE_LIBRARY_H__
